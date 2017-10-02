@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>U.S. Deadliest Mass Shootings</title>
     <script src="./d3.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
@@ -12,6 +13,7 @@
     <script>
       let rowConverter = d => {
         return {
+          id: d.id,
           date: d.date,
           location: d.location,
           name: d.name,
@@ -27,8 +29,14 @@
       });
 
       function loadDataVis() {
-        let w = 700, h = 500;
-        let colors = d3.schemeCategory20;
+        let w = 800, h = 800;
+
+        let colors = d3.scaleLinear()
+                       .domain([
+                         d3.min(dataset, d => d.fatalities),
+                         d3.max(dataset, d => d.fatalities)
+                       ])
+                       .range(["brown", "red"]);
 
         let svg = d3.select("svg")
                     .attr("width", w)
@@ -39,17 +47,57 @@
                      .padding(1.5);
 
         let root = d3.hierarchy({children: dataset})
-                     .sum(d => d.fatalities);
+                     .sum(d => d.fatalities)
+                     .each(d => d.id = d.data.id);
+
+        let packedData = pack(root).leaves();
+
+        let fontSizeScale = d3.scaleLinear()
+                              .domain([
+                                 d3.min(packedData, d => d.r),
+                                 d3.max(packedData, d => d.r)
+                               ])
+                              .range([10, 18]);
 
         let node = svg.selectAll(".node")
-                      .data(pack(root).leaves())
+                      .data(packedData)
                       .enter().append("g")
                       .attr("class", "node")
                       .attr("transform", d => "translate(" + d.x + "," + d.y + ")");
 
         node.append("circle")
+            .attr("id", d => d.id)
             .attr("r", d => d.r)
-            .style("fill", (d, i) => colors[i]);
+            .style("fill", (d, i) => colors(d.data.fatalities));
+
+        node.append("clipPath")
+            .attr("id", d => "clip-" + d.id)
+            .append("use")
+            .attr("xlink:href", d => "#" + d.id);
+
+        node.append("text")
+            .attr("clip-path", d => "url(#clip-" + d.id + ")")
+            .text(d => d.data.name)
+            .attr("class", "labels")
+            .attr("text-anchor", "middle")
+            .style("font-size", d => {
+              if (d.data.name == "Binghamton Civic Association") return 8;
+              return fontSizeScale(d.r);
+            })
+
+        node.append("text")
+            .attr("clip-path", d => "url(#clip-" + d.id + ")")
+            .text(d => {
+              if (d.data.name == "Las Vegas") return d.data.fatalities + "+";
+              return d.data.fatalities;
+            })
+            .attr("y", 23)
+            .attr("class", "labels")
+            .attr("text-anchor", "middle")
+            .style("font-size", d => {
+              if (d.data.name == "Binghamton Civic Association") return 8;
+              return fontSizeScale(d.r);
+            })
       }
 
     </script>

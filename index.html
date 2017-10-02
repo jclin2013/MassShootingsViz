@@ -30,7 +30,7 @@
 
       function loadDataVis() {
         let w = 800, h = 650;
-        let p = {top: 20, bottom: 20, left: 20, right: 20}
+        let margin = {top: 30, bottom: 30, left: 20, right: 20}
 
         let colors = d3.scaleLinear()
                        .domain([
@@ -43,8 +43,17 @@
                     .attr("width", w)
                     .attr("height", h);
 
+        svg.append("text")
+           .attr("x", w/2)
+           .attr("y", margin.top + 10)
+           .attr("text-anchor", "middle")
+           .attr("font-size", 30)
+           .attr("font-family", "'Noto Sans', sans-serif")
+           .text("Mass Shootings in the U.S. and their Fatalities")
+
+
         let pack = d3.pack()
-                     .size([w, h])
+                     .size([w, h - margin.bottom])
                      .padding(1.5);
 
         let root = d3.hierarchy({children: dataset})
@@ -58,13 +67,13 @@
                                  d3.min(packedData, d => d.r),
                                  d3.max(packedData, d => d.r)
                                ])
-                              .range([8, 18]);
+                              .range([7.5, 18]);
 
         let node = svg.selectAll(".node")
                       .data(packedData)
                       .enter().append("g")
                       .attr("class", "node")
-                      .attr("transform", d => "translate(" + d.x + "," + d.y + ")");
+                      .attr("transform", d => "translate(" + d.x + "," + (d.y + margin.top) + ")");
 
         node.append("circle")
             .attr("id", d => d.id)

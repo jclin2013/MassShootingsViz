@@ -9,7 +9,23 @@
   </head>
   <body>
     <svg></svg>
+    <div class='tooltipContainer hidden'>
+      <div class='tooltipDateLabel'></div>
 
+      <div class='tooltipTweetText'></div>
+
+      <div class='tooltipToneTitle'></div>
+
+      <div class='tooltipMiniBarChart'>
+        <div class='tooltipBarContainer'>
+          <div class='tooltipBarColor'></div>
+        </div>
+
+        <div class='tooltipScoreContainer'>
+          <div class='tooltipScore'></div>
+          <div class='tooltipLikelihood'></div>
+        </div>
+      </div>
     <script>
       let rowConverter = d => {
         return {
@@ -49,8 +65,8 @@
            .attr("text-anchor", "middle")
            .attr("font-size", 30)
            .attr("font-family", "'Noto Sans', sans-serif")
-           .text("Mass Shootings in the U.S. and their Fatalities")
-
+           .attr("text-decoration", "underline")
+           .text("Mass Shootings in the U.S. and their Fatalities");
 
         let pack = d3.pack()
                      .size([w, h - margin.bottom])
@@ -64,10 +80,10 @@
 
         let fontSizeScale = d3.scaleLinear()
                               .domain([
-                                 d3.min(packedData, d => d.r),
-                                 d3.max(packedData, d => d.r)
+                                 d3.max(packedData, d => d.data.name.length/d.r),
+                                 d3.min(packedData, d => d.data.name.length/d.r)
                                ])
-                              .range([7.5, 18]);
+                              .range([10, 18]);
 
         let node = svg.selectAll(".node")
                       .data(packedData)
@@ -87,29 +103,31 @@
             .append("use")
             .attr("xlink:href", d => "#" + d.id);
 
+        //insert names of shootings
         node.append("text")
             .attr("clip-path", d => "url(#clip-" + d.id + ")")
             .text(d => d.data.name)
             .attr("class", "labels")
             .attr("text-anchor", "middle")
             .style("font-size", d => {
-              if (d.data.name == "Binghamton Civic Association") return 7;
-              return fontSizeScale(d.r);
+              // if (d.data.name == "Binghamton Civic Association") return 7;
+              return fontSizeScale(d.data.name.length/d.r);
             })
 
+        //insert fatalities of shootings
         node.append("text")
             .attr("clip-path", d => "url(#clip-" + d.id + ")")
             .text(d => {
               if (d.data.name == "Las Vegas") return "≥ " + d.data.fatalities;
               return d.data.fatalities;
             })
-            .attr("y", 23)
+            .attr("y", 20)
             .attr("class", "labels")
             .attr("text-anchor", "middle")
-            .style("font-size", d => {
-              if (d.data.name == "Binghamton Civic Association") return 8;
-              return fontSizeScale(d.r);
-            })
+            // .style("font-size", d => {
+            //   if (d.data.name == "Binghamton Civic Association") return 8;
+            //   return fontSizeScale(d.r);
+            // })
       }
 
     </script>

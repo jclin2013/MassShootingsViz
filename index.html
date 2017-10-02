@@ -9,23 +9,13 @@
   </head>
   <body>
     <svg></svg>
+
     <div class='tooltipContainer hidden'>
       <div class='tooltipDateLabel'></div>
+      <div class='tooltipLocation'></div>
+      <div class='tooltipLink'></div>
+    </div>
 
-      <div class='tooltipTweetText'></div>
-
-      <div class='tooltipToneTitle'></div>
-
-      <div class='tooltipMiniBarChart'>
-        <div class='tooltipBarContainer'>
-          <div class='tooltipBarColor'></div>
-        </div>
-
-        <div class='tooltipScoreContainer'>
-          <div class='tooltipScore'></div>
-          <div class='tooltipLikelihood'></div>
-        </div>
-      </div>
     <script>
       let rowConverter = d => {
         return {
@@ -91,12 +81,20 @@
                       .attr("class", "node")
                       .attr("transform", d => "translate(" + d.x + "," + (d.y + margin.top) + ")");
 
+        let highlightEffect = circle => {
+          circle.on("mouseover", function() {
+                  this.style.fill = "black"
+                })
+                .on("mouseout", function(d, i) {
+                  this.style.fill = colors(d.data.fatalities)
+                });
+        }
+
         node.append("circle")
             .attr("id", d => d.id)
             .attr("r", d => d.r)
             .style("fill", (d, i) => colors(d.data.fatalities))
-            .on("mouseover", function() {this.style.fill = "black"} )
-            .on("mouseout", function(d, i) {this.style.fill = colors(d.data.fatalities)} );
+            .call(highlightEffect);
 
         node.append("clipPath")
             .attr("id", d => "clip-" + d.id)
@@ -109,10 +107,7 @@
             .text(d => d.data.name)
             .attr("class", "labels")
             .attr("text-anchor", "middle")
-            .style("font-size", d => {
-              // if (d.data.name == "Binghamton Civic Association") return 7;
-              return fontSizeScale(d.data.name.length/d.r);
-            })
+            .style("font-size", d => fontSizeScale(d.data.name.length/d.r));
 
         //insert fatalities of shootings
         node.append("text")
@@ -123,11 +118,8 @@
             })
             .attr("y", 20)
             .attr("class", "labels")
-            .attr("text-anchor", "middle")
-            // .style("font-size", d => {
-            //   if (d.data.name == "Binghamton Civic Association") return 8;
-            //   return fontSizeScale(d.r);
-            // })
+            .attr("text-anchor", "middle");
+
       }
 
     </script>

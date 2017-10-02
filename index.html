@@ -29,7 +29,8 @@
       });
 
       function loadDataVis() {
-        let w = 800, h = 800;
+        let w = 800, h = 650;
+        let p = {top: 20, bottom: 20, left: 20, right: 20}
 
         let colors = d3.scaleLinear()
                        .domain([
@@ -57,7 +58,7 @@
                                  d3.min(packedData, d => d.r),
                                  d3.max(packedData, d => d.r)
                                ])
-                              .range([10, 18]);
+                              .range([8, 18]);
 
         let node = svg.selectAll(".node")
                       .data(packedData)
@@ -68,7 +69,9 @@
         node.append("circle")
             .attr("id", d => d.id)
             .attr("r", d => d.r)
-            .style("fill", (d, i) => colors(d.data.fatalities));
+            .style("fill", (d, i) => colors(d.data.fatalities))
+            .on("mouseover", function() {this.style.fill = "black"} )
+            .on("mouseout", function(d, i) {this.style.fill = colors(d.data.fatalities)} );
 
         node.append("clipPath")
             .attr("id", d => "clip-" + d.id)
@@ -81,14 +84,14 @@
             .attr("class", "labels")
             .attr("text-anchor", "middle")
             .style("font-size", d => {
-              if (d.data.name == "Binghamton Civic Association") return 8;
+              if (d.data.name == "Binghamton Civic Association") return 7;
               return fontSizeScale(d.r);
             })
 
         node.append("text")
             .attr("clip-path", d => "url(#clip-" + d.id + ")")
             .text(d => {
-              if (d.data.name == "Las Vegas") return d.data.fatalities + "+";
+              if (d.data.name == "Las Vegas") return "≥ " + d.data.fatalities;
               return d.data.fatalities;
             })
             .attr("y", 23)

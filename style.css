@@ -1,5 +1,12 @@
+svg {
+  border: 1px solid black;
+}
+
 .labels {
   font-family: 'Noto Sans', sans-serif;
   fill: white;
-  /*font-size: 1vw;*/
+}
+
+text {
+  pointer-events: none;
 }

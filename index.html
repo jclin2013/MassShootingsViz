@@ -12,26 +12,44 @@
     <script>
       let rowConverter = d => {
         return {
-          date, location, name,
-          fatalities: Number(fatalities)
+          date: d.date,
+          location: d.location,
+          name: d.name,
+          fatalities: Number(d.fatalities)
         }
       };
 
       let dataset;
 
-      d3.csv("us-mass-shootings-data.csv", rowConverter, d => {
-        dataset = d;
+      d3.csv("us-mass-shootings-data.csv", rowConverter, data => {
+        dataset = data;
         loadDataVis();
       });
 
       function loadDataVis() {
-        let w = 700, h = 400;
-        let p = {bottom: 50, right: 35, top: 85, left: 70};
+        let w = 700, h = 500;
+        let colors = d3.schemeCategory20;
 
         let svg = d3.select("svg")
                     .attr("width", w)
                     .attr("height", h);
 
+        let pack = d3.pack()
+                     .size([w, h])
+                     .padding(1.5);
+
+        let root = d3.hierarchy({children: dataset})
+                     .sum(d => d.fatalities);
+
+        let node = svg.selectAll(".node")
+                      .data(pack(root).leaves())
+                      .enter().append("g")
+                      .attr("class", "node")
+                      .attr("transform", d => "translate(" + d.x + "," + d.y + ")");
+
+        node.append("circle")
+            .attr("r", d => d.r)
+            .style("fill", (d, i) => colors[i]);
       }
 
     </script>

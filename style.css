@@ -11,12 +11,16 @@ text {
   pointer-events: none;
 }
 
-.tooltipContainer.hidden {
+/*.tooltipContainer.hidden {
   display: none;
-}
+}*/
 
 .tooltipContainer {
   width: 100px;
   height: 50px;
   border: 1px solid black;
+}
+
+circle {
+  position: relative;
 }

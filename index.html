@@ -4,17 +4,18 @@
     <meta charset="utf-8">
     <title>U.S. Deadliest Mass Shootings</title>
     <script src="./d3.js"></script>
+    <script src="./tooltipEffect.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
     <svg></svg>
 
-    <div class='tooltipContainer hidden'>
+    <!-- <div class='tooltipContainer hidden'>
       <div class='tooltipDateLabel'></div>
       <div class='tooltipLocation'></div>
       <div class='tooltipLink'></div>
-    </div>
+    </div> -->
 
     <script>
       let rowConverter = d => {
@@ -79,15 +80,34 @@
                       .data(packedData)
                       .enter().append("g")
                       .attr("class", "node")
-                      .attr("transform", d => "translate(" + d.x + "," + (d.y + margin.top) + ")");
+                      .attr("transform", d => "translate(" + d.x + "," + (d.y + margin.top) + ")")
+                      .call(tooltipEffect);
 
         let highlightEffect = circle => {
           circle.on("mouseover", function() {
-                  this.style.fill = "black"
+                  this.style.fill = "black";
                 })
                 .on("mouseout", function(d, i) {
-                  this.style.fill = colors(d.data.fatalities)
+                  this.style.fill = colors(d.data.fatalities);
                 });
+        }
+
+        function getCoords(elem) { // crossbrowser version
+            var box = elem.getBoundingClientRect();
+
+            var body = document.body;
+            var docEl = document.documentElement;
+
+            var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+            var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+            var clientTop = docEl.clientTop || body.clientTop || 0;
+            var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+            var top  = box.top +  scrollTop - clientTop;
+            var left = box.left + scrollLeft - clientLeft;
+
+            return { top: Math.round(top), left: Math.round(left) };
         }
 
         node.append("circle")

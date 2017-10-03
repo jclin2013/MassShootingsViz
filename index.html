@@ -31,7 +31,7 @@
 
       function loadDataVis() {
         let w = 800, h = 700;
-        let margin = {top: 50, bottom: 50, left: 0, right: 0}
+        let margin = {top: 50, bottom: 10, left: 0, right: 0}
 
         let colors = d3.scaleLinear()
                        .domain([
@@ -56,27 +56,31 @@
 
         //add source
         svg.append("a")
-           .attr("class", "source")
-           .attr("xlink:href", "https://www.axios.com/americas-worst-mass-shootings-2491943903.html")
+           .attr("class", "sourceLink")
+           .attr("href", "https://www.axios.com/americas-worst-mass-shootings-2491943903.html")
+           .attr("target", "_blank")
            .append("text")
            .attr("x", 5)
            .attr("y", h - 5)
            .attr("text-anchor", "start")
            .attr("font-size", 11)
            .attr("font-family", fontFamily)
-           .text("Source: Axios, 10/7/17, 'Las Vegas shooting deadliest in modern U.S. history'");
+           .text("Source: Axios, 10/2/17, 'Las Vegas shooting deadliest in modern U.S. history'");
 
-        svg.append("a")
-           .attr("class", "source")
-           .attr("x", 5)
-           .attr("y", h - 15)
-           .attr("text-anchor", "start")
-           .attr("font-size", 15)
-           .attr("font-family", fontFamily)
-           .text("Source: Axios");
+         //add byline
+         svg.append("a")
+            .attr("href", "https://www.jon-lin.com")
+            .attr("target", "_blank")
+            .append("text")
+            .attr("x", w - 5)
+            .attr("y", h - 8)
+            .attr("text-anchor", "end")
+            .attr("font-size", 18)
+            .attr("font-family", fontFamily)
+            .text("Built by Jon Lin");
 
         let pack = d3.pack()
-                     .size([w, h - margin.top])
+                     .size([w, h - margin.top - margin.bottom])
                      .padding(1.5);
 
         let root = d3.hierarchy({children: dataset})
@@ -91,7 +95,7 @@
                        d3.max(packedData, d => d.data[textField].length/d.r),
                        d3.min(packedData, d => d.data[textField].length/d.r)
                    ])
-                  .range([12, 18]);
+                  .range([11.5, 18]);
         }
 
         let nameSizeScale = dynamicFontSizing("name");
@@ -99,8 +103,6 @@
         let locationSizeScale = dynamicFontSizing("location");
 
          let extraInfoEffect = node => {
-           node.on("click", function(d) { window.open(d.data.link) });
-
            node.on("mouseover", function(d) {
                    d3.select(this).selectAll(".labels").attr("visibility", "hidden");
                    this.querySelector("circle").style.fill = "#5e5858";
@@ -139,7 +141,11 @@
 
         let node = svg.selectAll(".node")
                       .data(packedData)
-                      .enter().append("g")
+                      .enter()
+                      .append("a")
+                      .attr("href", d => d.data.link)
+                      .attr("target", "_blank")
+                      .append("g")
                       .attr("class", "node")
                       .attr("transform", d => "translate(" + d.x + "," + (d.y + margin.top) + ")")
                       .call(extraInfoEffect);

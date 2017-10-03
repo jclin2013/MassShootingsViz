@@ -7,33 +7,10 @@ svg {
   fill: white;
 }
 
-text {
+.node text {
   pointer-events: none;
-}
-
-.extraInfo.moreInfoLink {
-  /*pointer-events: visiblePainted;*/
-  /*cursor: pointer;*/
 }
 
 .node {
   cursor: pointer;
 }
-
-/*#moreInfoClick {
-  cursor: pointer;
-}*/
-
-/*.tooltipContainer.hidden {
-  display: none;
-}*/
-
-/*.tooltipContainer {
-  width: 100px;
-  height: 50px;
-  border: 1px solid black;
-}*/
-
-/*circle {
-  position: relative;
-}*/

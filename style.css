@@ -10,7 +10,3 @@ svg {
 .node text {
   pointer-events: none;
 }
-
-/*.node {
-  cursor: pointer;
-}*/

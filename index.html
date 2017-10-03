@@ -30,7 +30,7 @@
       });
 
       function loadDataVis() {
-        let w = 800, h = 700;
+        let w = 900, h = 650;
         let margin = {top: 50, bottom: 10, left: 0, right: 0}
 
         let colors = d3.scaleLinear()
@@ -41,8 +41,7 @@
                        .range(["brown", "red"]);
 
         let svg = d3.select("svg")
-                    .attr("width", w)
-                    .attr("height", h);
+                    .attr("viewBox", `0 0 ${w + " " + h}`);
 
         //add title
         svg.append("text")
@@ -95,49 +94,49 @@
                        d3.max(packedData, d => d.data[textField].length/d.r),
                        d3.min(packedData, d => d.data[textField].length/d.r)
                    ])
-                  .range([11.5, 18]);
+                  .range([10, 18]);
         }
 
         let nameSizeScale = dynamicFontSizing("name");
         let dateSizeScale = dynamicFontSizing("date");
         let locationSizeScale = dynamicFontSizing("location");
 
-         let extraInfoEffect = node => {
+        let extraInfoEffect = node => {
            node.on("mouseover", function(d) {
-                   d3.select(this).selectAll(".labels").attr("visibility", "hidden");
-                   this.querySelector("circle").style.fill = "#5e5858";
+             d3.select(this).selectAll(".labels").attr("visibility", "hidden");
+             this.querySelector("circle").style.fill = "#5e5858";
 
-                   let addText = (text, yPos, textField, scale) => {
-                     d3.select(this).append("text")
-                     .attr("clip-path", d => "url(#clip-" + d.id + ")")
-                     .attr("class", "extraInfo")
-                     .attr("y", yPos)
-                     .attr("text-anchor", "middle")
-                     .attr("fill", "white")
-                     .attr("font-family", fontFamily)
-                     .attr("font-size", d => scale(d.data[textField].length/d.r))
-                     .text(d => text)
-                   };
+             let addText = (text, yPos, textField, scale) => {
+               d3.select(this).append("text")
+               .attr("clip-path", d => "url(#clip-" + d.id + ")")
+               .attr("class", "extraInfo")
+               .attr("y", yPos)
+               .attr("text-anchor", "middle")
+               .attr("fill", "white")
+               .attr("font-family", fontFamily)
+               .attr("font-size", d => scale(d.data[textField].length/d.r))
+               .text(d => text)
+             };
 
-                   addText(d.data.date, -15, "date", dateSizeScale);
-                   addText(d.data.location, 5, "location", locationSizeScale);
+             addText(d.data.date, -15, "date", dateSizeScale);
+             addText(d.data.location, 5, "location", locationSizeScale);
 
-                   d3.select(this).append("text")
-                     .attr("clip-path", d => "url(#clip-" + d.id + ")")
-                     .attr("class", "extraInfo moreInfoLink")
-                     .attr("y", 22)
-                     .attr("fill", "white")
-                     .attr("font-family", fontFamily)
-                     .attr("font-size", 10)
-                     .attr("text-anchor", "middle")
-                     .text("Click for wiki");
-                 })
-                 .on("mouseout", function(d) {
-                   d3.selectAll(".extraInfo").remove();
-                   this.querySelector("circle").style.fill = colors(d.data.fatalities);
-                   d3.select(this).selectAll(".labels").attr("visibility", "visible");
-                 });
-         }
+             d3.select(this).append("text")
+               .attr("clip-path", d => "url(#clip-" + d.id + ")")
+               .attr("class", "extraInfo moreInfoLink")
+               .attr("y", 22)
+               .attr("fill", "white")
+               .attr("font-family", fontFamily)
+               .attr("font-size", 10)
+               .attr("text-anchor", "middle")
+               .text("Click for wiki");
+           })
+           .on("mouseout", function(d) {
+             d3.selectAll(".extraInfo").remove();
+             this.querySelector("circle").style.fill = colors(d.data.fatalities);
+             d3.select(this).selectAll(".labels").attr("visibility", "visible");
+           });
+        }
 
         let node = svg.selectAll(".node")
                       .data(packedData)

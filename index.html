@@ -4,19 +4,11 @@
     <meta charset="utf-8">
     <title>U.S. Deadliest Mass Shootings</title>
     <script src="./d3.js"></script>
-    <script src="./tooltipEffect.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
     <svg></svg>
-
-    <!-- <div class='tooltipContainer hidden'>
-      <div class='tooltipDateLabel'></div>
-      <div class='tooltipLocation'></div>
-      <div class='tooltipLink'></div>
-    </div> -->
-
     <script>
       let rowConverter = d => {
         return {
@@ -24,11 +16,13 @@
           date: d.date,
           location: d.location,
           name: d.name,
-          fatalities: Number(d.fatalities)
+          fatalities: Number(d.fatalities),
+          link: d.link
         }
       };
 
       let dataset;
+      let fontFamily = `'Lato', sans-serif`;
 
       d3.csv("us-mass-shootings-data.csv", rowConverter, data => {
         dataset = data;
@@ -36,8 +30,8 @@
       });
 
       function loadDataVis() {
-        let w = 800, h = 650;
-        let margin = {top: 30, bottom: 30, left: 20, right: 20}
+        let w = 800, h = 700;
+        let margin = {top: 50, bottom: 50, left: 0, right: 0}
 
         let colors = d3.scaleLinear()
                        .domain([
@@ -50,17 +44,18 @@
                     .attr("width", w)
                     .attr("height", h);
 
+        //add title
         svg.append("text")
            .attr("x", w/2)
-           .attr("y", margin.top + 10)
+           .attr("y", margin.top - 10)
            .attr("text-anchor", "middle")
-           .attr("font-size", 30)
-           .attr("font-family", "'Noto Sans', sans-serif")
+           .attr("font-size", 25)
+           .attr("font-family", fontFamily)
            .attr("text-decoration", "underline")
            .text("Mass Shootings in the U.S. and their Fatalities");
 
         let pack = d3.pack()
-                     .size([w, h - margin.bottom])
+                     .size([w, h - margin.top])
                      .padding(1.5);
 
         let root = d3.hierarchy({children: dataset})
@@ -69,52 +64,69 @@
 
         let packedData = pack(root).leaves();
 
-        let fontSizeScale = d3.scaleLinear()
-                              .domain([
-                                 d3.max(packedData, d => d.data.name.length/d.r),
-                                 d3.min(packedData, d => d.data.name.length/d.r)
-                               ])
-                              .range([10, 18]);
+        let dynamicFontSizing = textField => {
+          return d3.scaleLinear()
+                   .domain([
+                       d3.max(packedData, d => d.data[textField].length/d.r),
+                       d3.min(packedData, d => d.data[textField].length/d.r)
+                   ])
+                  .range([12, 18]);
+        }
+
+        let nameSizeScale = dynamicFontSizing("name");
+        let dateSizeScale = dynamicFontSizing("date");
+        let locationSizeScale = dynamicFontSizing("location");
+
+         let extraInfoEffect = node => {
+           node.on("click", function(d) { window.open(d.data.link) });
+
+           node.on("mouseover", function(d) {
+                   d3.select(this).selectAll(".labels").attr("visibility", "hidden");
+                   this.querySelector("circle").style.fill = "#5e5858";
+
+                   let addText = (text, yPos, textField, scale) => {
+                     d3.select(this).append("text")
+                     .attr("clip-path", d => "url(#clip-" + d.id + ")")
+                     .attr("class", "extraInfo")
+                     .attr("y", yPos)
+                     .attr("text-anchor", "middle")
+                     .attr("fill", "white")
+                     .attr("font-family", fontFamily)
+                     .attr("font-size", d => scale(d.data[textField].length/d.r))
+                     .text(d => text)
+                   };
+
+                   addText(d.data.date, -15, "date", dateSizeScale);
+                   addText(d.data.location, 5, "location", locationSizeScale);
+
+                   d3.select(this).append("text")
+                     .attr("clip-path", d => "url(#clip-" + d.id + ")")
+                     .attr("class", "extraInfo moreInfoLink")
+                     .attr("y", 22)
+                     .attr("fill", "white")
+                     .attr("font-family", fontFamily)
+                     .attr("font-size", 10)
+                     .attr("text-anchor", "middle")
+                     .text("Click for wiki");
+                 })
+                 .on("mouseout", function(d) {
+                   d3.selectAll(".extraInfo").remove();
+                   this.querySelector("circle").style.fill = colors(d.data.fatalities);
+                   d3.select(this).selectAll(".labels").attr("visibility", "visible");
+                 });
+         }
 
         let node = svg.selectAll(".node")
                       .data(packedData)
                       .enter().append("g")
                       .attr("class", "node")
                       .attr("transform", d => "translate(" + d.x + "," + (d.y + margin.top) + ")")
-                      .call(tooltipEffect);
-
-        let highlightEffect = circle => {
-          circle.on("mouseover", function() {
-                  this.style.fill = "black";
-                })
-                .on("mouseout", function(d, i) {
-                  this.style.fill = colors(d.data.fatalities);
-                });
-        }
-
-        function getCoords(elem) { // crossbrowser version
-            var box = elem.getBoundingClientRect();
-
-            var body = document.body;
-            var docEl = document.documentElement;
-
-            var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-            var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
-
-            var clientTop = docEl.clientTop || body.clientTop || 0;
-            var clientLeft = docEl.clientLeft || body.clientLeft || 0;
-
-            var top  = box.top +  scrollTop - clientTop;
-            var left = box.left + scrollLeft - clientLeft;
-
-            return { top: Math.round(top), left: Math.round(left) };
-        }
+                      .call(extraInfoEffect);
 
         node.append("circle")
             .attr("id", d => d.id)
             .attr("r", d => d.r)
-            .style("fill", (d, i) => colors(d.data.fatalities))
-            .call(highlightEffect);
+            .style("fill", (d, i) => colors(d.data.fatalities));
 
         node.append("clipPath")
             .attr("id", d => "clip-" + d.id)
@@ -127,7 +139,7 @@
             .text(d => d.data.name)
             .attr("class", "labels")
             .attr("text-anchor", "middle")
-            .style("font-size", d => fontSizeScale(d.data.name.length/d.r));
+            .style("font-size", d => nameSizeScale(d.data.name.length/d.r));
 
         //insert fatalities of shootings
         node.append("text")

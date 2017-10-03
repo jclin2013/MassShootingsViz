@@ -1,5 +1,8 @@
 svg {
   border: 1px solid black;
+  max-width: 900px;
+  margin: 0 auto;
+  display: block;
 }
 
 .labels {

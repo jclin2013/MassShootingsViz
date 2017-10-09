@@ -4,11 +4,38 @@
     <meta charset="utf-8">
     <title>U.S. Deadliest Mass Shootings</title>
     <script src="./d3.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <svg></svg>
+    <svg>
+      <text id="dataLinksContainer">
+        <tspan class="bottomBoldLabel">Source: </tspan>
+
+        <a href="https://www.axios.com/americas-worst-mass-shootings-2491943903.html"
+           target="_blank">
+           <tspan class="bottomLink">Axios, 10/2/17, 'Las Vegas shooting deadliest in modern U.S. history'</tspan>
+        </a>
+
+        <tspan> / </tspan>
+
+        <tspan class="bottomBoldLabel">Download:</tspan>
+
+        <a href="/us-mass-shootings-data.csv">
+           <tspan class="bottomLink">Data as CSV</tspan>
+        </a>
+      </text>
+
+      <text id="bylineContainer">
+        <a href="https://www.jon-lin.com/" target="_blank">
+          <tspan class="bottomBoldLabel bottomLink">Built by Jon Lin</tspan>
+        </a>
+        <tspan> | </tspan>
+        <a href="https://github.com/jclin2013/MassShootingsViz" target="_blank">
+          <tspan class="bottomBoldLabel bottomLink">Github</tspan>
+        </a>
+      </text>
+    </svg>
     <script>
       let rowConverter = d => {
         return {
@@ -53,30 +80,19 @@
            .attr("text-decoration", "underline")
            .text("America's deadliest modern mass shootings and their fatalities");
 
-        //add source
-        svg.append("a")
-           .attr("class", "sourceLink")
-           .attr("href", "https://www.axios.com/americas-worst-mass-shootings-2491943903.html")
-           .attr("target", "_blank")
-           .append("text")
-           .attr("x", 5)
-           .attr("y", h - 5)
-           .attr("text-anchor", "start")
-           .attr("font-size", 11)
-           .attr("font-family", fontFamily)
-           .text("Source: Axios, 10/2/17, 'Las Vegas shooting deadliest in modern U.S. history'");
+        //position bottom links
+        let yOffset = h - 5;
 
-         //add byline
-         svg.append("a")
-            .attr("href", "https://www.jon-lin.com")
-            .attr("target", "_blank")
-            .append("text")
-            .attr("x", w - 5)
-            .attr("y", h - 5)
-            .attr("text-anchor", "end")
-            .attr("font-size", 11)
-            .attr("font-family", fontFamily)
-            .text("Built by Jon Lin");
+        d3.select("#dataLinksContainer")
+          .attr("x", 5)
+          .attr("y", yOffset)
+          .attr("font-size", 9)
+
+        d3.select("#bylineContainer")
+          .attr("x", w - 5)
+          .attr("y", yOffset)
+          .attr("font-size", 9)
+          .attr("text-anchor", "end")
 
         let pack = d3.pack()
                      .size([w, h - margin.top - margin.bottom])

@@ -13,3 +13,21 @@ svg {
 .node text {
   pointer-events: none;
 }
+
+#dataLinksContainer > *, #bylineContainer > * {
+  font-size: 14px;
+  font-family: 'Lato', sans-serif;
+}
+
+.bottomLink {
+  cursor: pointer;
+}
+
+.bottomLink:hover {
+  fill: blue;
+  text-decoration: underline;
+}
+
+tspan.bottomBoldLabel {
+  font-weight: bold;
+}

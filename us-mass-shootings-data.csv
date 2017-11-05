@@ -3,16 +3,17 @@ id,date,location,name,fatalities,link
 2,6/2016,"Orlando, FL",Pulse Nightclub,49,https://en.wikipedia.org/wiki/2016_Orlando_nightclub_shooting
 3,4/2007,"Blacksburg, VA",Virginia Tech,32,https://en.wikipedia.org/wiki/Virginia_Tech_shooting
 4,12/2012,"Newtown, CT",Sandy Hook,26,https://en.wikipedia.org/wiki/Sandy_Hook_Elementary_School_shooting
-5,10/1991,"Killeen, TX",Luby's Cafeteria,23,https://en.wikipedia.org/wiki/Luby%27s_shooting
-6,7/1984,"San Ysdiro, CA",San Ysdiro,21,https://en.wikipedia.org/wiki/San_Ysidro_McDonald%27s_massacre
-7,8/1966,"Austin, TX",U. of Texas Tower,16,https://en.wikipedia.org/wiki/University_of_Texas_tower_shooting
-8,12/2015,"San Bernardino, CA",San Bernardino,14,https://en.wikipedia.org/wiki/2015_San_Bernardino_attack
-9,8/1986,"Edmond, OK",OK Post Office,14,https://en.wikipedia.org/wiki/Edmond_post_office_shooting
-10,11/2009,"Fort Hood, TX",Fort Hood,13,https://en.wikipedia.org/wiki/2009_Fort_Hood_shooting
-11,4/1999,"Littleton, CO",Columbine,13,https://en.wikipedia.org/wiki/Columbine_High_School_massacre
-12,4/2009,"Binghamton, NY",Binghamton,13,https://en.wikipedia.org/wiki/Binghamton_shootings
-13,9/1949,"Camden, NJ",Walk of Death,13,https://en.wikipedia.org/wiki/Howard_Unruh
-14,9/1982,"Wilkes-Barre, PA",Wilkes-Barre,13,https://en.wikipedia.org/wiki/George_Banks#Shootings
-15,2/1983,"Seattle, WA",Wah Mee,13,https://en.wikipedia.org/wiki/Wah_Mee_massacre
-16,7/2012,"Aurora, CO",Aurora,12,https://en.wikipedia.org/wiki/2012_Aurora_shooting
-17,9/2013,Wash. D.C.,Navy Yard,12,https://en.wikipedia.org/wiki/Washington_Navy_Yard_shooting
+5,11/2017,"Sutherland Springs, TX",Sutherland Springs,25,https://en.wikipedia.org/wiki/Sutherland_Springs_church_shooting
+6,10/1991,"Killeen, TX",Luby's Cafeteria,23,https://en.wikipedia.org/wiki/Luby%27s_shooting
+7,7/1984,"San Ysdiro, CA",San Ysdiro,21,https://en.wikipedia.org/wiki/San_Ysidro_McDonald%27s_massacre
+8,8/1966,"Austin, TX",U. of Texas Tower,16,https://en.wikipedia.org/wiki/University_of_Texas_tower_shooting
+9,12/2015,"San Bernardino, CA",San Bernardino,14,https://en.wikipedia.org/wiki/2015_San_Bernardino_attack
+10,8/1986,"Edmond, OK",OK Post Office,14,https://en.wikipedia.org/wiki/Edmond_post_office_shooting
+11,11/2009,"Fort Hood, TX",Fort Hood,13,https://en.wikipedia.org/wiki/2009_Fort_Hood_shooting
+12,4/1999,"Littleton, CO",Columbine,13,https://en.wikipedia.org/wiki/Columbine_High_School_massacre
+13,4/2009,"Binghamton, NY",Binghamton,13,https://en.wikipedia.org/wiki/Binghamton_shootings
+14,9/1949,"Camden, NJ",Walk of Death,13,https://en.wikipedia.org/wiki/Howard_Unruh
+15,9/1982,"Wilkes-Barre, PA",Wilkes-Barre,13,https://en.wikipedia.org/wiki/George_Banks#Shootings
+16,2/1983,"Seattle, WA",Wah Mee,13,https://en.wikipedia.org/wiki/Wah_Mee_massacre
+17,7/2012,"Aurora, CO",Aurora,12,https://en.wikipedia.org/wiki/2012_Aurora_shooting
+18,9/2013,Wash. D.C.,Navy Yard,12,https://en.wikipedia.org/wiki/Washington_Navy_Yard_shooting

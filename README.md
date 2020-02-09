@@ -15,4 +15,4 @@
 
 <img src="chart-hover-demo.gif"></img>
 
-[live-link]: https://jclin2013.github.io/MassShootingsViz/
+[live-link]: https://jon-lin.github.io/MassShootingsViz/
